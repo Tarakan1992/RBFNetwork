@@ -35,5 +35,19 @@ namespace MultilayerPerceptron
 		{
 			
 		}
+
+		private double ComputedCenterOfMass(double[] ms)
+		{
+			double center = 0;
+			double a = 0;
+
+			for (var i = 0; i < ms.Length; i++)
+			{
+				center += i*ms[i];
+				a += ms[i];
+			}
+
+			return center/a;
+		}
 	}
 }
