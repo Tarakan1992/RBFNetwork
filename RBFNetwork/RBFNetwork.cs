@@ -27,6 +27,8 @@ namespace MultilayerPerceptron
 			_p = p;
 			_h = h;
 			PerceptronInitialization();
+            var obj = new Tuple<string, int>("asdf", 1);
+            obj.
 		}
 
 		private void PerceptronInitialization()
@@ -117,7 +119,6 @@ namespace MultilayerPerceptron
 		private void FeedbackErrorCorrection(double[] y, double[] expectedResult, double[] input)
 		{
 			CorrectionOutputLayer(y, expectedResult);
-			CorrectionHiddenLayer(input);
 		}
 
 		private void CorrectionOutputLayer(double[] y, double[] expectedResult)
@@ -136,25 +137,7 @@ namespace MultilayerPerceptron
 			}
 		}
 
-		private void CorrectionHiddenLayer(double[] input)
-		{
-			for (int i = 0; i < _n; i++)
-			{
-				for (int j = 0; j < _h; j++)
-				{
-					double delta = 0;
 
-                    for (int k = 0; k < _p; k++)
-                    {
-                        delta += deltaOL[k] * wOL[j, k];
-                    }
-
-					delta *= valuesHL[j]*(1 - valuesHL[j]);
-
-					wHL[i, j] = wHL[i, j] + Speed * delta * input[i];
-				}
-			}
-		}
 
 		private double GetSum(double[] x, double[,] matrix, int j)
 		{
