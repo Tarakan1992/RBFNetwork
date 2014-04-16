@@ -35,5 +35,32 @@ namespace MultilayerPerceptron
 		{
 			
 		}
+
+        private void ComputingDelta()
+        {
+           
+            for (int i = 0; i < centroids.Length; i++ )
+            {
+                for (int j = 0; j < centroids.Length; j++)
+                {
+                    if (j == 0)
+                    {
+                        delta[i] = Math.Abs(centroids[i] - centroids[j]);
+                        continue;
+                    }
+
+                    if (i != j)
+                    {
+                        var dlt = Math.Abs(centroids[i] - centroids[j]);
+ 
+                        if (dlt < delta[i])
+                        {
+                            delta[i] = dlt;
+                        }
+                    }
+                }
+            }
+ 
+        }
 	}
 }
