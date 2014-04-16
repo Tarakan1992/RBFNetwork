@@ -46,7 +46,7 @@ namespace MultilayerPerceptron
 
 				while (true)
 				{
-					y = GetNeuralResult();
+					y = GetNeuralResult(images[i]);
 
 					var dlt = GetMaxD(y, expectedResult);
 
