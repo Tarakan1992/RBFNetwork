@@ -57,7 +57,7 @@ namespace MultilayerPerceptron
                         break;
                     }
 
-                    FeedbackErrorCorrection(y, expectedResult, input);
+                    FeedbackErrorCorrection(y, expectedResult);
                 }
             }
 		}
@@ -127,5 +127,16 @@ namespace MultilayerPerceptron
 
 			return results;
 		}
+
+        private void FeedbackErrorCorrection(double[] y, double[] expectedResult)
+        {
+            for (int i = 0; i < _h; i++)
+            {
+                for (int j = 0; j < _p; j++)
+                {
+                    w[i, j] = w[i, j] + Speed * _a * (expectedResult[j] - y[j]);
+                }
+            }
+        }
 	}
 }
