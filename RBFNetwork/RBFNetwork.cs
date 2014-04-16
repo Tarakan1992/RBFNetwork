@@ -12,6 +12,7 @@ namespace MultilayerPerceptron
 		private double[] centroids;
 		private double[] delta;
 		private double[] gValues;
+        private readonly double _a;
 
 		public RBFNetwork(int k)
 		{
@@ -19,7 +20,7 @@ namespace MultilayerPerceptron
 			delta = new double[k];
 			gValues = new double[k];
 			w = new double[k, k];
-
+            _a = 0.8;
 			var r = new Random();
 
 			for (var i = 0; i < k; i++)
@@ -48,7 +49,7 @@ namespace MultilayerPerceptron
 
                 while (true)
                 {
-                    y = GetNeuronResult(input);
+                    y = GetNeuralResult(input);
 
                     var dlt = GetMaxD(y, expectedResult);
 
@@ -138,5 +139,20 @@ namespace MultilayerPerceptron
                 }
             }
         }
+
+		private double GetMaxD(double[] ms1, double[] ms2)
+		{
+			double max = 0;
+
+			for (var i = 0; i < ms1.Length; i++)
+			{
+				if (Math.Abs(ms1[i] - ms2[i]) > max)
+				{
+					max = Math.Abs(ms1[i] - ms2[i]);
+				}
+			}
+
+			return max;
+		}
 	}
 }
