@@ -18,7 +18,7 @@ namespace MultilayerPerceptron
 		public Form1()
 		{
 			InitializeComponent();
-			_rbfNetwork = new RBFNetwork(4);
+			
 			_originalImages = new Dictionary<string, Bitmap>();
             _imageClassDictionary = new Dictionary<string, int>();
 			ImageInitialization();
@@ -32,7 +32,7 @@ namespace MultilayerPerceptron
                 trainedList.Add(mapper.ToDouble(image.Value));                
             }
 
-            _rbfNetwork.TrainedNetwork(trainedList);
+            _rbfNetwork = new RBFNetwork(trainedList);
   		}
 
 		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)

@@ -6,51 +6,51 @@ namespace MultilayerPerceptron
 	public class RBFNetwork
 	{
 		private double[,] w;
-		private double[] centroids;
+		private List<double[]> centroids;
 		private double[] delta;
 		private double[] gValues;
 		private readonly double _a;
+	    private const double speed = 0.9;
 
-		public RBFNetwork(int k)
+		public RBFNetwork(List<double[]> images)
 		{
-			centroids = new double[k];
-			delta = new double[k];
-			gValues = new double[k];
-			w = new double[k, k];
-			_a = 1;
-			var r = new Random();
+			delta = new double[images.Count];
+            gValues = new double[images.Count];
+            w = new double[images.Count, images.Count];
+		    centroids = images;
+            _a = 0.9;
 
-			for (var i = 0; i < k; i++)
-			{
-				for (var j = 0; j < k; j++)
-				{
-					w[i, j] = r.Next(0, 100) / 100.0;
-				}
-			}
-		}
 
-		public void TrainedNetwork(List<double[]> images)
-		{
-			for (var i = 0; i < centroids.Length; i++)
-			{
-				centroids[i] = ComputedCenterOfMass(images[i]);
-			}
-
-			ComputingDelta();
+            var r = new Random();
 
 			for (var i = 0; i < images.Count; i++)
 			{
+				for (var j = 0; j < images.Count; j++)
+				{
+					w[i, j] = r.Next(-100, 100) / 100.0;
+				}
+			}
+
+            TrainedNetwork();
+		}
+
+		private void TrainedNetwork()
+		{
+			ComputingDelta();
+
+			for (var i = 0; i < centroids.Count; i++)
+			{
 				double[] y;
-				var expectedResult = new double[images.Count];
+				var expectedResult = new double[centroids.Count];
 				expectedResult[i] = 1.0;
 
 				while (true)
 				{
-					y = GetNeuralResult(images[i]);
+					y = GetNeuralResult(centroids[i]);
 
 					var dlt = GetMaxD(y, expectedResult);
 
-					if (dlt < 0.05)
+					if (y[i] > 0.95)
 					{
 						break;
 					}
@@ -62,22 +62,22 @@ namespace MultilayerPerceptron
 
 		private void ComputingDelta()
 		{
-			for (var i = 0; i < centroids.Length; i++)
+			for (var i = 0; i < centroids.Count; i++)
 			{
 				delta[i] = double.MaxValue;
 			}
 
-			for (int i = 0; i < centroids.Length; i++)
+            for (int i = 0; i < centroids.Count; i++)
 			{
-				for (int j = 0; j < centroids.Length; j++)
+                for (int j = 0; j < centroids.Count; j++)
 				{
 					if (i != j)
 					{
-						var dlt = Math.Abs(centroids[i] - centroids[j]);
+					    var dlt = GetEvclidDistance(centroids[i], centroids[j])/2;
 
-						if (dlt < delta[i] * 2)
+						if (dlt < delta[i])
 						{
-							delta[i] = dlt/2;
+							delta[i] = dlt;
 						}
 					}
 				}
@@ -85,27 +85,13 @@ namespace MultilayerPerceptron
 
 		}
 
-		private double ComputedCenterOfMass(double[] ms)
-		{
-			double center = 0;
-			double a = 0;
-
-			for (var i = 0; i < ms.Length; i++)
-			{
-				center += i*ms[i];
-			}
-
-			return center / ms.Length;
-		}
-
 		public double[] GetNeuralResult(double[] source)
 		{
 			double[] results = new double[gValues.Length];
-			var center = ComputedCenterOfMass(source);
 
 			for (var i = 0; i < gValues.Length; i++)
 			{
-				gValues[i] = Math.Exp(-(center - centroids[i])/ Math.Pow(delta[i], 2.0));
+				gValues[i] = Math.Exp(-1 * Math.Pow(GetEvclidDistance(source, centroids[i]), 2.0)/ Math.Pow(delta[i], 2.0));
 			}
 
 			for (var i = 0; i < results.Length; i++)
@@ -114,6 +100,7 @@ namespace MultilayerPerceptron
 				{
 					results[i] += gValues[j] * w[i, j];
 				}
+			    results[i] = ActivateFunction(results[i]);
 			}
 
 			return results;
@@ -125,7 +112,7 @@ namespace MultilayerPerceptron
 			{
 				for (int j = 0; j < y.Length; j++)
 				{
-					w[i, j] = w[i, j] + gValues[i] * _a * (expectedResult[j] - y[j]);
+					w[i, j] = w[i, j] + gValues[i] * speed * (expectedResult[j] - y[j]);
 				}
 			}
 		}
@@ -144,5 +131,21 @@ namespace MultilayerPerceptron
 
 			return max;
 		}
+
+	    private double GetEvclidDistance(double[] vec1, double[] vec2)
+	    {
+	        double resutl = 0;
+	        for (var i = 0; i < vec1.Length; i++)
+	        {
+	            resutl += Math.Pow(vec1[i] - vec2[i], 2.0);
+	        }
+
+	        return Math.Sqrt(resutl);
+	    }
+
+        private double ActivateFunction(double argument)
+        {
+            return 1 / (1 + Math.Exp(-_a * argument));
+        }
 	}
 }
