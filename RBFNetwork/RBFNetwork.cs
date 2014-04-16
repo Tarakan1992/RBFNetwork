@@ -9,6 +9,7 @@ namespace MultilayerPerceptron
 		private double[] centroids;
 		private double[] delta;
 		private double[] gValues;
+        private readonly double _a;
 
 		public RBFNetwork(int k)
 		{
@@ -16,7 +17,7 @@ namespace MultilayerPerceptron
 			delta = new double[k];
 			gValues = new double[k];
 			w = new double[k, k];
-
+            _a = 0.8;
 			var r = new Random();
 
 			for (var i = 0; i < k; i++)
@@ -124,6 +125,17 @@ namespace MultilayerPerceptron
 
 			return results;
 		}
+
+        private void FeedbackErrorCorrection(double[] y, double[] expectedResult)
+        {
+            for (int i = 0; i < _h; i++)
+            {
+                for (int j = 0; j < _p; j++)
+                {
+                    w[i, j] = w[i, j] + Speed * _a * (expectedResult[j] - y[j]);
+                }
+            }
+        }
 
 		private double GetMaxD(double[] ms1, double[] ms2)
 		{
