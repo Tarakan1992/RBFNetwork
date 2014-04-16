@@ -100,7 +100,7 @@ namespace MultilayerPerceptron
 			return center/a;
 		}
 
-		private double[] GetNeuralResult(double[] source)
+		public double[] GetNeuralResult(double[] source)
 		{
 			double[] results = new double[gValues.Length];
 
