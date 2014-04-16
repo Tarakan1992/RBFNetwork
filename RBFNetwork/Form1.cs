@@ -12,32 +12,28 @@ namespace MultilayerPerceptron
 	{
 		private Bitmap originalImage;
 		private Dictionary<string, Bitmap> _originalImages;
-//		private NeuralNetwork _neuralNetwork;
-	    private Perceptron _perceptron;
+        private RBFNetwork _rbfNetwork;
 	    private readonly Dictionary<string, int> _imageClassDictionary; 
 
 		public Form1()
 		{
 			InitializeComponent();
-			_perceptron = new Perceptron(18*18,4,25);
-			//originalImage = null;
+			_rbfNetwork = new RBFNetwork(4);
 			_originalImages = new Dictionary<string, Bitmap>();
             _imageClassDictionary = new Dictionary<string, int>();
 			ImageInitialization();
-			//_neuralNetwork = new NeuralNetwork();
-			//_neuralNetwork.TeachingNeuralNetwork(_originalImages.Values.ToArray());
-            InitializationPicturesPanel();
+			InitializationPicturesPanel();
+            var mapper = new ImageMapper();
 
-		    for (int i = 0; i < 10; i++)
-		    {
-                foreach (var image in _originalImages)
-                {
-                    _perceptron.TrainedNeural(new ImageMapper().ToDouble(image.Value),
-                        _imageClassDictionary[image.Key]);
-                }
-		    }
-            
-		}
+            var trainedList = new List<double>();
+
+            foreach (var image in _originalImages)
+            {
+                trainedList.Add(mapper.ToDouble(image));                
+            }
+
+            _rbfNetwork.TrainedNetwork(trainedList);
+  		}
 
 		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
 		{
@@ -80,8 +76,7 @@ namespace MultilayerPerceptron
 
 		private void buttonStart_Click(object sender, EventArgs e)
 		{
-			//pictureBoxResult.Image = _neuralNetwork.RecognizeImage(originalImage);
-		    var result = _perceptron.GetNeuronResult(new ImageMapper().ToDouble(originalImage));
+		    var result = _rbfNetwork.GetNeuronResult(new ImageMapper().ToDouble(originalImage));
 
             labelK.Text = Math.Round(result[0], 4).ToString();
             labelL.Text = Math.Round(result[1], 4).ToString();
