@@ -62,23 +62,22 @@ namespace MultilayerPerceptron
 
 		private void ComputingDelta()
 		{
+			for (var i = 0; i < centroids.Length; i++)
+			{
+				delta[i] = double.MaxValue;
+			}
+
 			for (int i = 0; i < centroids.Length; i++)
 			{
 				for (int j = 0; j < centroids.Length; j++)
 				{
-					if (j == 0)
-					{
-						delta[i] = Math.Abs(centroids[i] - centroids[j]);
-						continue;
-					}
-
 					if (i != j)
 					{
 						var dlt = Math.Abs(centroids[i] - centroids[j]);
 
-						if (dlt < delta[i])
+						if (dlt < delta[i] * 2)
 						{
-							delta[i] = dlt;
+							delta[i] = dlt/2;
 						}
 					}
 				}
@@ -93,26 +92,20 @@ namespace MultilayerPerceptron
 
 			for (var i = 0; i < ms.Length; i++)
 			{
-				center += i * ms[i];
-				a += ms[i];
+				center += i*ms[i];
 			}
 
-			return center / a;
+			return center / ms.Length;
 		}
 
 		public double[] GetNeuralResult(double[] source)
 		{
 			double[] results = new double[gValues.Length];
+			var center = ComputedCenterOfMass(source);
 
 			for (var i = 0; i < gValues.Length; i++)
 			{
-				double temp = 0;
-				for (var j = 0; j < source.Length; j++)
-				{
-					temp += Math.Pow((source[j] - centroids[i]), 2.0);
-				}
-
-				gValues[i] = Math.Exp(-temp / Math.Pow(delta[i], 2.0));
+				gValues[i] = Math.Exp(-(center - centroids[i])/ Math.Pow(delta[i], 2.0));
 			}
 
 			for (var i = 0; i < results.Length; i++)
