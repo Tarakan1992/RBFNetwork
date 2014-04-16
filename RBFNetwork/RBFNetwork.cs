@@ -17,7 +17,7 @@ namespace MultilayerPerceptron
 			delta = new double[k];
 			gValues = new double[k];
 			w = new double[k, k];
-			_a = 0.8;
+			_a = 0.4;
 			var r = new Random();
 
 			for (var i = 0; i < k; i++)
