@@ -17,14 +17,14 @@ namespace MultilayerPerceptron
 			delta = new double[k];
 			gValues = new double[k];
 			w = new double[k, k];
-			_a = 0.8;
+			_a = 1;
 			var r = new Random();
 
 			for (var i = 0; i < k; i++)
 			{
 				for (var j = 0; j < k; j++)
 				{
-					w[i, j] = r.Next(-100, 100) / 100.0;
+					w[i, j] = r.Next(0, 100) / 100.0;
 				}
 			}
 		}
