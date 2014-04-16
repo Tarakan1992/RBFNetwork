@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MultilayerPerceptron
 {
@@ -48,7 +45,7 @@ namespace MultilayerPerceptron
 
                 while (true)
                 {
-                    y = GetNeuralResult(input);
+                    y = GetNeuralResult();
 
                     var dlt = GetMaxD(y, expectedResult);
 
@@ -57,7 +54,7 @@ namespace MultilayerPerceptron
                         break;
                     }
 
-                    FeedbackErrorCorrection(y, expectedResult, input);
+                    FeedbackErrorCorrection(y, expectedResult);
                 }
             }
 		}
