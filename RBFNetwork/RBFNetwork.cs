@@ -128,11 +128,11 @@ namespace MultilayerPerceptron
 
         private void FeedbackErrorCorrection(double[] y, double[] expectedResult)
         {
-            for (int i = 0; i < _h; i++)
+            for (int i = 0; i < gValues.Length; i++)
             {
-                for (int j = 0; j < _p; j++)
+                for (int j = 0; j < y.Length; j++)
                 {
-                    w[i, j] = w[i, j] + Speed * _a * (expectedResult[j] - y[j]);
+                    w[i, j] = w[i, j] + gValues[i] * _a * (expectedResult[j] - y[j]);
                 }
             }
         }
