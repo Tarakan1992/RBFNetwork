@@ -39,6 +39,27 @@ namespace MultilayerPerceptron
 			}
 
 			ComputingDelta();
+
+            for (var i = 0; i < images.Count; i++)
+            {
+                double[] y;
+                var expectedResult = new double[images.Count];
+                expectedResult[i] = 1.0;
+
+                while (true)
+                {
+                    y = GetNeuronResult(input);
+
+                    var dlt = GetMaxD(y, expectedResult);
+
+                    if (dlt < 0.05)
+                    {
+                        break;
+                    }
+
+                    FeedbackErrorCorrection(y, expectedResult, input);
+                }
+            }
 		}
 
         private void ComputingDelta()
