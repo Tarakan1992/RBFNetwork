@@ -25,11 +25,11 @@ namespace MultilayerPerceptron
 			InitializationPicturesPanel();
             var mapper = new ImageMapper();
 
-            var trainedList = new List<double>();
+            var trainedList = new List<double[]>();
 
             foreach (var image in _originalImages)
             {
-                trainedList.Add(mapper.ToDouble(image));                
+                trainedList.Add(mapper.ToDouble(image.Value));                
             }
 
             _rbfNetwork.TrainedNetwork(trainedList);
@@ -76,7 +76,7 @@ namespace MultilayerPerceptron
 
 		private void buttonStart_Click(object sender, EventArgs e)
 		{
-		    var result = _rbfNetwork.GetNeuronResult(new ImageMapper().ToDouble(originalImage));
+		    var result = _rbfNetwork.GetNeuralResult(new ImageMapper().ToDouble(originalImage));
 
             labelK.Text = Math.Round(result[0], 4).ToString();
             labelL.Text = Math.Round(result[1], 4).ToString();
