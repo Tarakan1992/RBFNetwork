@@ -31,14 +31,18 @@ namespace MultilayerPerceptron
 			}
 		}
 
-		public void SetRBFLayer(List<double[]> images)
+		public void TrainedNetwork(List<double[]> images)
 		{
-			
+			for (var i = 0; i < centroids.Length; i++)
+			{
+				centroids[i] = ComputedCenterOfMass(images[i]);
+			}
+
+			ComputingDelta();
 		}
 
         private void ComputingDelta()
         {
-           
             for (int i = 0; i < centroids.Length; i++ )
             {
                 for (int j = 0; j < centroids.Length; j++)
