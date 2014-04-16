@@ -39,6 +39,8 @@ namespace MultilayerPerceptron
 			}
 
 			ComputingDelta();
+
+
 		}
 
         private void ComputingDelta()
@@ -105,6 +107,21 @@ namespace MultilayerPerceptron
 			}
 
 			return results;
+		}
+
+		private double GetMaxD(double[] ms1, double[] ms2)
+		{
+			double max = 0;
+
+			for (var i = 0; i < ms1.Length; i++)
+			{
+				if (Math.Abs(ms1[i] - ms2[i]) > max)
+				{
+					max = Math.Abs(ms1[i] - ms2[i]);
+				}
+			}
+
+			return max;
 		}
 	}
 }
