@@ -9,7 +9,7 @@ namespace MultilayerPerceptron
 		private double[] centroids;
 		private double[] delta;
 		private double[] gValues;
-        private readonly double _a;
+		private readonly double _a;
 
 		public RBFNetwork(int k)
 		{
@@ -17,14 +17,14 @@ namespace MultilayerPerceptron
 			delta = new double[k];
 			gValues = new double[k];
 			w = new double[k, k];
-            _a = 0.8;
+			_a = 0.8;
 			var r = new Random();
 
 			for (var i = 0; i < k; i++)
 			{
 				for (var j = 0; j < k; j++)
 				{
-					w[i,j] = r.Next(-100, 100) / 100.0;
+					w[i, j] = r.Next(-100, 100) / 100.0;
 				}
 			}
 		}
@@ -38,53 +38,53 @@ namespace MultilayerPerceptron
 
 			ComputingDelta();
 
-            for (var i = 0; i < images.Count; i++)
-            {
-                double[] y;
-                var expectedResult = new double[images.Count];
-                expectedResult[i] = 1.0;
+			for (var i = 0; i < images.Count; i++)
+			{
+				double[] y;
+				var expectedResult = new double[images.Count];
+				expectedResult[i] = 1.0;
 
-                while (true)
-                {
-                    y = GetNeuralResult();
+				while (true)
+				{
+					y = GetNeuralResult();
 
-                    var dlt = GetMaxD(y, expectedResult);
+					var dlt = GetMaxD(y, expectedResult);
 
-                    if (dlt < 0.05)
-                    {
-                        break;
-                    }
+					if (dlt < 0.05)
+					{
+						break;
+					}
 
-                    FeedbackErrorCorrection(y, expectedResult);
-                }
-            }
+					FeedbackErrorCorrection(y, expectedResult);
+				}
+			}
 		}
 
-        private void ComputingDelta()
-        {
-            for (int i = 0; i < centroids.Length; i++ )
-            {
-                for (int j = 0; j < centroids.Length; j++)
-                {
-                    if (j == 0)
-                    {
-                        delta[i] = Math.Abs(centroids[i] - centroids[j]);
-                        continue;
-                    }
+		private void ComputingDelta()
+		{
+			for (int i = 0; i < centroids.Length; i++)
+			{
+				for (int j = 0; j < centroids.Length; j++)
+				{
+					if (j == 0)
+					{
+						delta[i] = Math.Abs(centroids[i] - centroids[j]);
+						continue;
+					}
 
-                    if (i != j)
-                    {
-                        var dlt = Math.Abs(centroids[i] - centroids[j]);
- 
-                        if (dlt < delta[i])
-                        {
-                            delta[i] = dlt;
-                        }
-                    }
-                }
-            }
- 
-        }
+					if (i != j)
+					{
+						var dlt = Math.Abs(centroids[i] - centroids[j]);
+
+						if (dlt < delta[i])
+						{
+							delta[i] = dlt;
+						}
+					}
+				}
+			}
+
+		}
 
 		private double ComputedCenterOfMass(double[] ms)
 		{
@@ -93,11 +93,11 @@ namespace MultilayerPerceptron
 
 			for (var i = 0; i < ms.Length; i++)
 			{
-				center += i*ms[i];
+				center += i * ms[i];
 				a += ms[i];
 			}
 
-			return center/a;
+			return center / a;
 		}
 
 		private double[] GetNeuralResult(double[] source)
@@ -112,30 +112,30 @@ namespace MultilayerPerceptron
 					temp += Math.Pow((source[j] - centroids[i]), 2.0);
 				}
 
-				gValues[i] = Math.Exp(-temp/delta[i]);
+				gValues[i] = Math.Exp(-temp / Math.Pow(delta[i], 2.0));
 			}
 
 			for (var i = 0; i < results.Length; i++)
 			{
-				for (var j = 0; j < results.Length; j++)
+				for (var j = 0; j < gValues.Length; j++)
 				{
-					results[i] += gValues[j]*w[i, j];
+					results[i] += gValues[j] * w[i, j];
 				}
 			}
 
 			return results;
 		}
 
-        private void FeedbackErrorCorrection(double[] y, double[] expectedResult)
-        {
-            for (int i = 0; i < gValues.Length; i++)
-            {
-                for (int j = 0; j < y.Length; j++)
-                {
-                    w[i, j] = w[i, j] + gValues[i] * _a * (expectedResult[j] - y[j]);
-                }
-            }
-        }
+		private void FeedbackErrorCorrection(double[] y, double[] expectedResult)
+		{
+			for (int i = 0; i < gValues.Length; i++)
+			{
+				for (int j = 0; j < y.Length; j++)
+				{
+					w[i, j] = w[i, j] + gValues[i] * _a * (expectedResult[j] - y[j]);
+				}
+			}
+		}
 
 		private double GetMaxD(double[] ms1, double[] ms2)
 		{
