@@ -12,7 +12,6 @@ namespace MultilayerPerceptron
 	{
 		private Bitmap originalImage;
 		private Dictionary<string, Bitmap> _originalImages;
-        //private RBFNetwork _rbfNetwork;
 	    private CompetingNetwork _competingNetwork;
 	    private readonly Dictionary<int, string> _imageClassDictionary; 
         
@@ -34,7 +33,6 @@ namespace MultilayerPerceptron
                 trainedList.Add(mapper.ToDouble(image.Value));                
             }
 
-            //_rbfNetwork = new RBFNetwork(trainedList);
             _competingNetwork = new CompetingNetwork(trainedList);
   		}
 
@@ -58,11 +56,13 @@ namespace MultilayerPerceptron
 		{
 			originalImage = new Bitmap(_originalImages[ConfigurationManager.AppSettings[comboBoxLetter.SelectedItem.ToString()]]);
 			pictureBoxOriginal.Image = originalImage;
+		    pictureBoxResult.Image = null;
 
-            labelK.Text = "";
-            labelL.Text = "";
-            labelM.Text = "";
-            labelN.Text = "";
+		    if (comboBoxPercentOfNoise.SelectedIndex < 0)
+		    {
+		        comboBoxPercentOfNoise.SelectedIndex = 0;
+		    }
+
 		}
 
 		private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
@@ -71,22 +71,13 @@ namespace MultilayerPerceptron
 			{
 				buttonGenerateNoise.Enabled = true;
 			}
-            labelK.Text = "";
-            labelL.Text = "";
-            labelM.Text = "";
-            labelN.Text = "";
 		}
 
 		private void buttonStart_Click(object sender, EventArgs e)
 		{
-		    //var result = _rbfNetwork.GetNeuralResult(new ImageMapper().ToDouble(originalImage));
 		    var result = _competingNetwork.GetResult(new ImageMapper().ToDouble(originalImage));
 
-            //labelK.Text = Math.Round(result[0], 4).ToString();
-            //labelL.Text = Math.Round(result[1], 4).ToString();
-            //labelM.Text = Math.Round(result[2], 4).ToString();
-            //labelN.Text = Math.Round(result[3], 4).ToString();
-		    pictureBoxOriginal.Image = _originalImages[_imageClassDictionary[result]];
+		    pictureBoxResult.Image = _originalImages[_imageClassDictionary[result]];
 
 		}
 
@@ -105,10 +96,6 @@ namespace MultilayerPerceptron
 
 	    private void InitializationPicturesPanel()
 	    {
-	        pictureBoxK.Image = _originalImages["K"];
-            pictureBoxL.Image = _originalImages["L"];
-            pictureBoxM.Image = _originalImages["M"];
-            pictureBoxN.Image = _originalImages["N"];
 	    }
 
 	    private void tableLayoutPanel4_Paint(object sender, PaintEventArgs e)
