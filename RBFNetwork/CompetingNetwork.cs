@@ -17,7 +17,7 @@
 			inputVectorSize = images.First().Length;
 
 			w = new double[inputVectorSize, images.Count];
-			y = new double[2][];
+			y = new double[2][];                                //y[0] - value, v[1] - winnings count
 
 			for (var i = 0; i < 2; i++)
 			{
