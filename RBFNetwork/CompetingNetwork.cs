@@ -10,11 +10,15 @@
 		private double[][] y;
 		private List<double[]> _images;
 		private int inputVectorSize;
+		private double[][] classesKeys; 
 
 		public CompetingNetwork(List<double[]> images)
 		{
 			_images = images;
 			inputVectorSize = images.First().Length;
+
+			classesKeys = new double[images.Count][];
+
 
 			w = new double[inputVectorSize, images.Count];
 			y = new double[2][];                                //y[0] - value, v[1] - winnings count
@@ -27,6 +31,7 @@
 			for (var i = 0; i < images.Count; i++)
 			{
 				y[1][i] = 1;
+				classesKeys[i] = new double[images.Count];
 			}
 
 			var r = new Random();
@@ -94,5 +99,7 @@
 
 			return resutl;
 		}
+
+		//private int Get
 	}
 }
