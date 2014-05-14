@@ -1,4 +1,6 @@
-﻿namespace MultilayerPerceptron
+﻿using System.Net;
+
+namespace MultilayerPerceptron
 {
 	using System;
 	using System.Collections.Generic;
@@ -6,11 +8,12 @@
 
 	public class CompetingNetwork
 	{
-		private double[,] w;
+		private double[][] w;
 		private double[] y;
 		private List<double[]> _images;
 		private int inputVectorSize;
-		private double[][] classesKeys; 
+		private double[][] classesKeys;
+	    private double _speed = 2;
 
 		public CompetingNetwork(List<double[]> images)
 		{
@@ -19,8 +22,13 @@
 
 			classesKeys = new double[images.Count][];
 
-			w = new double[inputVectorSize, images.Count];
-			y = new double[images.Count];                                //y[0] - value, v[1] - winnings count
+		    w = new double[images.Count][];
+		    for (var i = 0; i < w.Length; i++)
+		    {
+		        w[i] = new double[inputVectorSize];
+		    }
+
+		    y = new double[images.Count];                                //y[0] - value, v[1] - winnings count
 
 			for (var i = 0; i < images.Count; i++)
 			{
@@ -34,20 +42,53 @@
 			{
 				for (var i = 0; i < inputVectorSize; i++)
 				{
-					w[i, j] = r.NextDouble() > 0.5 ? 1.0 : 0;
+					w[j][i] = r.NextDouble() > 0.5 ? 1.0 : 0;
 				}
 			}
+            TrainingNetwork();
 		}
 
-	    private double[] TrainingNetwork(List<double[]> images)
+	    private void TrainingNetwork()
 	    {
-	        for (var i = 0; i < images.Count; i++)
+            
+	        for (var i = 0; i < _images.Count; i++)
 	        {
-	            var result = GetNeronResult(image);
+	            while (true)
+	            {
+	                var winner = new double[_images.Count];
+	                for (var j = 0; j < winner.Length; j++)
+	                {
+	                    winner[j] = y[j]*VectorModule(VectorSumAndSub(_images[i], w[i], -1));
+	                }
 
+	                var winnerIndex = Min(winner);
 
+	                y[winnerIndex]++;
+
+	                CorrectNeuralWeight(winnerIndex);
+
+	                if (GetEvclidDistance(_images[i], w[winnerIndex]) < 0.2)
+                        break;
+	            }
+
+	            classesKeys[i] = GetNeuralResult(_images[i]);
 	        }
-	        return null;
+	    }
+
+	    private void CorrectNeuralWeight(int winner)
+	    {
+	        var temp = VectorSumAndSub(_images[winner], w[winner], -1);
+	        for (int i = 0; i < temp.Length; i++)
+	        {
+	            temp[i] *= _speed;
+	        }
+
+	        var denominator = VectorModule(VectorSumAndSub(w[winner], temp, 1));
+
+	        for (var i = 0; i < inputVectorSize; i++)
+	        {
+	            w[winner][i] = w[winner][i] + _speed*(_images[winner][i] - w[winner][i])/denominator;
+	        }
 	    }
 
 	    private double GetEvclidDistance(double[] vec1, double[] vec2)
@@ -127,7 +168,7 @@
 				double temp = 0;
 				for (var i = 0; i < inputVectorSize; i++)
 				{
-					temp += input[i]*w[i, j];
+					temp += input[i]*w[j][i];
 				}
 
 				result[j] = temp;

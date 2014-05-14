@@ -12,15 +12,17 @@ namespace MultilayerPerceptron
 	{
 		private Bitmap originalImage;
 		private Dictionary<string, Bitmap> _originalImages;
-        private RBFNetwork _rbfNetwork;
-	    private readonly Dictionary<string, int> _imageClassDictionary; 
+        //private RBFNetwork _rbfNetwork;
+	    private CompetingNetwork _competingNetwork;
+	    private readonly Dictionary<int, string> _imageClassDictionary; 
+        
 
 		public Form1()
 		{
 			InitializeComponent();
 			
 			_originalImages = new Dictionary<string, Bitmap>();
-            _imageClassDictionary = new Dictionary<string, int>();
+            _imageClassDictionary = new Dictionary<int, string>();
 			ImageInitialization();
 			InitializationPicturesPanel();
             var mapper = new ImageMapper();
@@ -32,7 +34,8 @@ namespace MultilayerPerceptron
                 trainedList.Add(mapper.ToDouble(image.Value));                
             }
 
-            _rbfNetwork = new RBFNetwork(trainedList);
+            //_rbfNetwork = new RBFNetwork(trainedList);
+            _competingNetwork = new CompetingNetwork(trainedList);
   		}
 
 		private void tableLayoutPanel1_Paint(object sender, PaintEventArgs e)
@@ -76,12 +79,14 @@ namespace MultilayerPerceptron
 
 		private void buttonStart_Click(object sender, EventArgs e)
 		{
-		    var result = _rbfNetwork.GetNeuralResult(new ImageMapper().ToDouble(originalImage));
+		    //var result = _rbfNetwork.GetNeuralResult(new ImageMapper().ToDouble(originalImage));
+		    var result = _competingNetwork.GetResult(new ImageMapper().ToDouble(originalImage));
 
-            labelK.Text = Math.Round(result[0], 4).ToString();
-            labelL.Text = Math.Round(result[1], 4).ToString();
-            labelM.Text = Math.Round(result[2], 4).ToString();
-            labelN.Text = Math.Round(result[3], 4).ToString();
+            //labelK.Text = Math.Round(result[0], 4).ToString();
+            //labelL.Text = Math.Round(result[1], 4).ToString();
+            //labelM.Text = Math.Round(result[2], 4).ToString();
+            //labelN.Text = Math.Round(result[3], 4).ToString();
+		    pictureBoxOriginal.Image = _originalImages[_imageClassDictionary[result]];
 
 		}
 
@@ -94,7 +99,7 @@ namespace MultilayerPerceptron
 				var key = appSettings[letter.ToString()];
 				_originalImages[key] = new Bitmap("../../Content/" + key + ".png");
 
-                _imageClassDictionary.Add(key, classIndex++);
+                _imageClassDictionary.Add(classIndex++, key);
 			}
 		}
 
