@@ -100,6 +100,15 @@
 			return resutl;
 		}
 
-		//private int Get
+		public int GetResult(double[] input)
+		{
+			var evclidDistances = new double[classesKeys.Length];
+			for (var i = 0; i < classesKeys.Length; i++)
+			{
+				evclidDistances[i] = GetEvclidDistance(classesKeys[i], input);
+			}
+
+			return Min(evclidDistances);
+		}
 	}
 }
