@@ -40,7 +40,6 @@
 			}
 		}
 
-
 		private double GetEvclidDistance(double[] vec1, double[] vec2)
 		{
 			double resutl = 0;
@@ -68,7 +67,7 @@
 			return min;
 		}
 
-		private double VectorModue(double[] vector)
+		private double VectorModule(double[] vector)
 		{
 			double module = 0;
 			for (var i = 0; i < vector.Length; i++)
@@ -79,5 +78,21 @@
 			return Math.Sqrt(module);
 		}
 
+		private double[] VectorSumAndSub(double[] vector1, double[] vector2, int sign)
+		{
+			if (vector1.Length != vector2.Length)
+			{
+				throw new Exception("Vector size must be equal!");
+			}
+
+			var resutl = new double[vector1.Length];
+
+			for (var i = 0; i < vector1.Length; i++)
+			{
+				resutl[i] = vector1[i] + vector2[i]*sign;
+			}
+
+			return resutl;
+		}
 	}
 }
