@@ -68,5 +68,16 @@
 			return min;
 		}
 
+		private double VectorModue(double[] vector)
+		{
+			double module = 0;
+			for (var i = 0; i < vector.Length; i++)
+			{
+				module += Math.Pow(vector[i], 2.0);
+			}
+
+			return Math.Sqrt(module);
+		}
+
 	}
 }
