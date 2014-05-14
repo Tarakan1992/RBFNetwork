@@ -7,7 +7,7 @@
 	public class CompetingNetwork
 	{
 		private double[,] w;
-		private double[][] y;
+		private double[] y;
 		private List<double[]> _images;
 		private int inputVectorSize;
 		private double[][] classesKeys; 
@@ -19,18 +19,12 @@
 
 			classesKeys = new double[images.Count][];
 
-
 			w = new double[inputVectorSize, images.Count];
-			y = new double[2][];                                //y[0] - value, v[1] - winnings count
-
-			for (var i = 0; i < 2; i++)
-			{
-				y[i] = new double[images.Count];
-			}
+			y = new double[images.Count];                                //y[0] - value, v[1] - winnings count
 
 			for (var i = 0; i < images.Count; i++)
 			{
-				y[1][i] = 1;
+				y[i] = 1;
 				classesKeys[i] = new double[images.Count];
 			}
 
@@ -45,7 +39,18 @@
 			}
 		}
 
-		private double GetEvclidDistance(double[] vec1, double[] vec2)
+	    private double[] TrainingNetwork(List<double[]> images)
+	    {
+	        for (var i = 0; i < images.Count; i++)
+	        {
+	            var result = GetNeronResult(image);
+
+
+	        }
+	        return null;
+	    }
+
+	    private double GetEvclidDistance(double[] vec1, double[] vec2)
 		{
 			double resutl = 0;
 			for (var i = 0; i < vec1.Length; i++)
