@@ -9,7 +9,7 @@
 		private double[,] w;
 		private double[][] y;
 		private List<double[]> _images;
-		private int inputVectorSize ;
+		private int inputVectorSize;
 
 		public CompetingNetwork(List<double[]> images)
 		{
@@ -38,6 +38,34 @@
 					w[i, j] = r.NextDouble() > 0.5 ? 1.0 : 0;
 				}
 			}
+		}
+
+
+		private double GetEvclidDistance(double[] vec1, double[] vec2)
+		{
+			double resutl = 0;
+			for (var i = 0; i < vec1.Length; i++)
+			{
+				resutl += Math.Pow(vec1[i] - vec2[i], 2.0);
+			}
+
+			return Math.Sqrt(resutl);
+		}
+
+		private int Min(double[] vec)
+		{
+			if (vec == null || vec.Length == 0)
+			{
+				return -1;
+			}
+
+			var min = 0;
+			for (var i = 1; i < vec.Length; i++)
+			{
+				min = vec[i] < vec[min] ? i : min;
+			}
+
+			return min;
 		}
 
 	}
