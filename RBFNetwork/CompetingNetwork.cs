@@ -105,6 +105,35 @@
 			return resutl;
 		}
 
-		//private int Get
+		public int GetResult(double[] input)
+		{
+			var result = GetNeuralResult(input);
+
+			var evclidDistances = new double[classesKeys.Length];
+			for (var i = 0; i < classesKeys.Length; i++)
+			{
+				evclidDistances[i] = GetEvclidDistance(classesKeys[i], result);
+			}
+
+			return Min(evclidDistances);
+		}
+
+		private double[] GetNeuralResult(double[] input)
+		{
+			var result = new double[_images.Count];
+
+			for (var j = 0; j < _images.Count; j++)
+			{
+				double temp = 0;
+				for (var i = 0; i < inputVectorSize; i++)
+				{
+					temp += input[i]*w[i, j];
+				}
+
+				result[j] = temp;
+			}
+
+			return result;
+		}
 	}
 }
